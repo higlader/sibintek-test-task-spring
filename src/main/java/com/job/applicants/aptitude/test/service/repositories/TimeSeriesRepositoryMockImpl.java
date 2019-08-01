@@ -20,10 +20,10 @@ public class TimeSeriesRepositoryMockImpl implements TimeSeriesRepository {
     private H2MockPointsRepository h2MockPointsRepository;
     private H2MockTagsRepository h2MockTagsRepository;
 
-    public TimeSeriesRepositoryMockImpl(H2MockPointsRepository mockPointsRepository, H2MockTagsRepository mockTagsRepository) {
+/*    public TimeSeriesRepositoryMockImpl(H2MockPointsRepository mockPointsRepository, H2MockTagsRepository mockTagsRepository) {
         this.h2MockPointsRepository = mockPointsRepository;
         this.h2MockTagsRepository = mockTagsRepository;
-    }
+    }*/
 
     @Override
     public Stream<Tag> tags(List<String> tagNameFilter) {
