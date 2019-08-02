@@ -5,6 +5,20 @@
     <title>PointApp</title>
 </head>
 <body>
-<p>В начале не было ничего</p>
+<button>Отфильтровать по дате</button>
+<table border="3">
+    <tr>
+        <td>Tag Name</td>
+        <td colspan="3">Point</td>
+    </tr>
+    <tr th:each="tag:${tags}">
+        <td th:text="${tag.name}"></td>
+        <td>
+        <table border="2">
+            <tr th:each="point:${poits}"><td th:text="${point.value}"></td><td th:text="${point.quality}"></td><td th:text="${point.ts}"></td></tr>
+        </table>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
