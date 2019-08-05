@@ -26,10 +26,10 @@ public class TimeSeriesController {
     public String getListTag(Model modelTag,Model modelPoit){
         Stream<Tag> tags = timeSeriesRepository.getAllTag();
         List<Tag> tagList = tags.collect(Collectors.toList());
-        Stream<H2Tag> h2TagStream = timeSeriesRepository.getAllH2Tag();
-        Stream<H2Point> h2PointStream = timeSeriesRepository.getAllH2Point();
+/*        Stream<H2Tag> h2TagStream = timeSeriesRepository.getAllH2Tag();
+        Stream<H2Point> h2PointStream = timeSeriesRepository.getAllH2Point();*/
        // Stream<Point> point = timeSeriesRepository.getAllPoints(tagList);
-        List<Point> pointList = new ArrayList<>();
+        List<Point> pointList = timeSeriesRepository.getAllPoints().collect(Collectors.toList());
         modelTag.addAttribute("tags",tagList);
         //modelPoit.addAttribute("point",pointList);
         return "point";

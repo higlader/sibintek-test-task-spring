@@ -23,5 +23,5 @@ public interface TimeSeriesRepository {
 
     Stream<H2Tag> getAllH2Tag();
 
-    Stream<Point> getAllPoints(List<Tag> tagFilter);
+    Stream<Point> getAllPoints();
 }

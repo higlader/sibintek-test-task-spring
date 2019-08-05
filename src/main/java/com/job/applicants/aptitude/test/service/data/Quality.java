@@ -12,6 +12,4 @@ public enum Quality {
     public int index() {
         return index;
     }
-
-
 }
