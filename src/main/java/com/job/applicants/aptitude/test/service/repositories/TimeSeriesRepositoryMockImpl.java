@@ -3,10 +3,7 @@ package com.job.applicants.aptitude.test.service.repositories;
 import com.job.applicants.aptitude.test.service.data.Point;
 import com.job.applicants.aptitude.test.service.data.Quality;
 import com.job.applicants.aptitude.test.service.data.Tag;
-import com.job.applicants.aptitude.test.service.mock.H2MockPointsRepository;
-import com.job.applicants.aptitude.test.service.mock.H2MockTagsRepository;
-import com.job.applicants.aptitude.test.service.mock.H2Point;
-import com.job.applicants.aptitude.test.service.mock.H2Tag;
+import com.job.applicants.aptitude.test.service.mock.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,37 +56,43 @@ public class TimeSeriesRepositoryMockImpl implements TimeSeriesRepository {
     }
 
     @Override
+    public H2Tag getH2TagByName(String tagName) {
+        return h2MockTagsRepository.findH2TagByName(tagName);
+    }
+
+    @Override
     public Stream<H2Tag> getAllH2Tag() {
         return StreamSupport.stream(h2MockTagsRepository.findAll().spliterator(), false);
     }
 
     @Override
-    public Stream<H2Point> getAllH2Point(){
-        //int result = jdbcTemplate.queryForObject();
-        return StreamSupport.stream(h2MockPointsRepository.findAll().spliterator(),false);
-    }
-
-    @Override
-    public Stream<Point> getAllPoints() {
+    public Stream<Point> getAllPoint() {
         String getAllFromPoints = "SELECT * FROM points";
-        List<Point> points =  jdbcTemplate.queryForObject(getAllFromPoints, new RowMapper<List<Point>>() {
+        List<H2Point> h2PointList =  jdbcTemplate.queryForObject(getAllFromPoints, new RowMapper<List<H2Point>>() {
             @Nullable
             @Override
-            public List<Point> mapRow(ResultSet resultSet, int i) throws SQLException {
-                List<Tag> tagList = getAllTag().collect(Collectors.toList());
-                List<Point> pointList = new ArrayList<>();
+            public List<H2Point> mapRow(ResultSet resultSet, int i) throws SQLException {
+                List<H2Point> pointList = new ArrayList<>();
                 while (resultSet.next()){
-                    Tag tag = tagList.get(i);
+                    H2Tag h2Tag = getH2TagByName(resultSet.getString("tag"));
                     LocalDateTime ts = resultSet.getTimestamp("ts").toLocalDateTime();
+                    H2PointIdentity h2PointIdentity = new H2PointIdentity(h2Tag,ts);
                     Long value = resultSet.getLong("value");
-                    Quality quality = Quality.valueOf(resultSet.getString("quality"));
-                    Point point = new Point(tag,ts,value,quality);
-                    pointList.add(point);
+                    Quality quality = Quality.getQualityFromIndex(Integer.valueOf(resultSet.getString("quality")));
+                    H2Point h2Point = new H2Point(h2PointIdentity,value,quality);
+                    pointList.add(h2Point);
                 }
                 return pointList;
             }
         });
-        return points.stream();
+        List<Point> pointList = new ArrayList<>();
+        for (H2Point h2Point:h2PointList) {
+            Tag tag = new Tag(h2Point.getH2PointIdentity().getTag().getName(),h2Point.getH2PointIdentity().getTag().getDescription());
+            Point point = new Point(tag,h2Point.getH2PointIdentity().getTs(),h2Point.getValue(),h2Point.getQuality());
+            pointList.add(point);
+        }
+
+        return pointList.stream();
     }
 
 }

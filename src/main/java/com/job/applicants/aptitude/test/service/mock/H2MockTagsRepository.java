@@ -1,6 +1,5 @@
 package com.job.applicants.aptitude.test.service.mock;
 
-import com.job.applicants.aptitude.test.service.data.Tag;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

@@ -12,4 +12,17 @@ public enum Quality {
     public int index() {
         return index;
     }
+
+    public static Quality getQualityFromIndex(int i){
+        switch (i) {
+            case 0:
+                return Quality.BAD;
+            case 1:
+                return Quality.GOOD;
+            case 2:
+                return Quality.EXCELLENT;
+            default:
+                throw new RuntimeException("Unknown index:" + i);
+        }
+    }
 }

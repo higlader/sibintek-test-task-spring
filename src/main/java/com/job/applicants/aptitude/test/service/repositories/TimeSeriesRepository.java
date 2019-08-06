@@ -17,11 +17,11 @@ public interface TimeSeriesRepository {
 
     Stream<Point> points(List<Tag> tagFilter, LocalDateTime start, LocalDateTime end);
 
-    Stream<H2Point> getAllH2Point();
+    Stream<Point> getAllPoint();
 
     Stream<Tag> getAllTag();
 
-    Stream<H2Tag> getAllH2Tag();
+    H2Tag getH2TagByName(String tagName);
 
-    Stream<Point> getAllPoints();
+    Stream<H2Tag> getAllH2Tag();
 }
