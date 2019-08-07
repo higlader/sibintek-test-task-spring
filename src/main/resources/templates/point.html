@@ -11,11 +11,11 @@
         <td>Tag Name</td>
         <td colspan="3">Point</td>
     </tr>
-    <tr th:each="tag:${tags}">
-        <td th:text="${tag.name}"></td>
+    <tr th:each="point:${points}">
+        <td th:text="${point.tag.name}"></td>
         <td>
         <table border="2">
-            <tr th:each="point:${points}"><td th:text="${point.tag.name}"></td><td th:text="${point.value}"></td><td th:text="${point.quality}"></td><td th:text="${point.ts}"></td></tr>
+            <tr><td th:text="${point.value}"></td><td th:text="${point.quality}"></td><td th:text="${point.ts}"></td></tr>
         </table>
         </td>
     </tr>
