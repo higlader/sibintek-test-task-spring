@@ -19,9 +19,12 @@ public interface TimeSeriesRepository {
 
     Stream<Point> getAllPoint();
 
+    Stream<Point> getAllLastFivePoint();
+
     Stream<Tag> getAllTag();
 
     H2Tag getH2TagByName(String tagName);
 
     Stream<H2Tag> getAllH2Tag();
+
 }

@@ -66,6 +66,37 @@ public class TimeSeriesRepositoryMockImpl implements TimeSeriesRepository {
     }
 
     @Override
+    public Stream<Point> getAllLastFivePoint(){
+        String fillter = "select  * \n" +
+                "from \n" +
+                "(\n" +
+                "    SELECT ROW_NUMBER() OVER (partition by p.TAG)  as num, p.* \n" +
+                "    FROM POINTS p\n" +
+                "    where p.QUALITY in (1, 2)\n" +
+                "    order by p.TAG, p.TS desc\n" +
+                ")  sel \n" +
+                "inner join TAGS t on sel.TAG = t.NAME\n" +
+                "where num <= 5";
+        List<Point> pointList =  jdbcTemplate.queryForObject(fillter, new RowMapper<List<Point>>() {
+            @Nullable
+            @Override
+            public List<Point> mapRow(ResultSet resultSet, int i) throws SQLException {
+                List<Point> points = new ArrayList<>();
+                while (resultSet.next()){
+                    Tag tag = new Tag(resultSet.getString("name"),resultSet.getString("description"));
+                    LocalDateTime ts = resultSet.getTimestamp("ts").toLocalDateTime();
+                    Long value = resultSet.getLong("value");
+                    Quality quality = Quality.getQualityFromIndex(Integer.valueOf(resultSet.getString("quality")));
+                    Point point = new Point(tag,ts,value,quality);
+                    points.add(point);
+                }
+                return points;
+            }
+        });
+        return pointList.stream();
+    }
+
+    @Override
     public Stream<Point> getAllPoint() {
         String getAllFromPoints = "SELECT * FROM points";
         List<H2Point> h2PointList =  jdbcTemplate.queryForObject(getAllFromPoints, new RowMapper<List<H2Point>>() {
